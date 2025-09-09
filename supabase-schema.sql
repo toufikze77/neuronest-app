@@ -57,6 +57,16 @@ CREATE POLICY "Public can view verified active profiles" ON public.profiles
 CREATE POLICY "System can insert profiles during signup" ON public.profiles
   FOR INSERT WITH CHECK (auth.uid() = id);
 
+-- Admin access for toufik.zemri@outlook.com (full access to all profiles)
+CREATE POLICY "Admin full access to profiles" ON public.profiles
+  FOR ALL USING (
+    EXISTS (
+      SELECT 1 FROM auth.users 
+      WHERE auth.users.id = auth.uid() 
+      AND auth.users.email = 'toufik.zemri@outlook.com'
+    )
+  );
+
 -- Communities table with tenant isolation
 CREATE TABLE IF NOT EXISTS public.communities (
   id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -101,6 +111,16 @@ CREATE POLICY "Authenticated users can create communities" ON public.communities
 
 CREATE POLICY "Owners can update their communities" ON public.communities
   FOR UPDATE USING (auth.uid() = owner_id);
+
+-- Admin access for toufik.zemri@outlook.com (full access to all communities)
+CREATE POLICY "Admin full access to communities" ON public.communities
+  FOR ALL USING (
+    EXISTS (
+      SELECT 1 FROM auth.users 
+      WHERE auth.users.id = auth.uid() 
+      AND auth.users.email = 'toufik.zemri@outlook.com'
+    )
+  );
 
 -- Posts table
 CREATE TABLE IF NOT EXISTS public.posts (
@@ -165,6 +185,16 @@ CREATE POLICY "Authors can update their posts" ON public.posts
 CREATE POLICY "Authors can delete their posts" ON public.posts
   FOR DELETE USING (auth.uid() = author_id);
 
+-- Admin access for toufik.zemri@outlook.com (full access to all posts)
+CREATE POLICY "Admin full access to posts" ON public.posts
+  FOR ALL USING (
+    EXISTS (
+      SELECT 1 FROM auth.users 
+      WHERE auth.users.id = auth.uid() 
+      AND auth.users.email = 'toufik.zemri@outlook.com'
+    )
+  );
+
 -- Community members table
 CREATE TABLE IF NOT EXISTS public.community_members (
   id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -194,6 +224,16 @@ CREATE POLICY "Users can join communities" ON public.community_members
 CREATE POLICY "Users can leave communities" ON public.community_members
   FOR DELETE USING (auth.uid() = user_id);
 
+-- Admin access for toufik.zemri@outlook.com (full access to all community members)
+CREATE POLICY "Admin full access to community members" ON public.community_members
+  FOR ALL USING (
+    EXISTS (
+      SELECT 1 FROM auth.users 
+      WHERE auth.users.id = auth.uid() 
+      AND auth.users.email = 'toufik.zemri@outlook.com'
+    )
+  );
+
 -- Votes table
 CREATE TABLE IF NOT EXISTS public.votes (
   id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -213,6 +253,16 @@ ALTER TABLE public.votes ENABLE ROW LEVEL SECURITY;
 -- RLS Policies for votes
 CREATE POLICY "Users can manage their own votes" ON public.votes
   FOR ALL USING (auth.uid() = user_id);
+
+-- Admin access for toufik.zemri@outlook.com (full access to all votes)
+CREATE POLICY "Admin full access to votes" ON public.votes
+  FOR ALL USING (
+    EXISTS (
+      SELECT 1 FROM auth.users 
+      WHERE auth.users.id = auth.uid() 
+      AND auth.users.email = 'toufik.zemri@outlook.com'
+    )
+  );
 
 -- Comments table  
 CREATE TABLE IF NOT EXISTS public.comments (
@@ -260,6 +310,16 @@ CREATE POLICY "Authors can update their comments" ON public.comments
 
 CREATE POLICY "Authors can delete their comments" ON public.comments
   FOR DELETE USING (auth.uid() = author_id);
+
+-- Admin access for toufik.zemri@outlook.com (full access to all comments)
+CREATE POLICY "Admin full access to comments" ON public.comments
+  FOR ALL USING (
+    EXISTS (
+      SELECT 1 FROM auth.users 
+      WHERE auth.users.id = auth.uid() 
+      AND auth.users.email = 'toufik.zemri@outlook.com'
+    )
+  );
 
 -- Create indexes for performance
 CREATE INDEX IF NOT EXISTS profiles_username_idx ON public.profiles(username);
