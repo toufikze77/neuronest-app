@@ -1,9 +1,24 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || 'https://placeholder.supabase.co'
-const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY || 'placeholder-key'
+// Environment variables are swapped, so we need to fix this
+const supabaseUrl = process.env.REACT_APP_SUPABASE_ANON_KEY || 'https://placeholder.supabase.co'
+const supabaseKey = process.env.REACT_APP_SUPABASE_URL || 'placeholder-key'
 
-export const supabase = createClient(supabaseUrl, supabaseKey)
+// For development, validate URL and provide fallback
+const isValidUrl = (url: string): boolean => {
+  try {
+    new URL(url)
+    return url.startsWith('https://') || url.startsWith('http://')
+  } catch {
+    return false
+  }
+}
+
+// Use a valid placeholder URL if environment variables are not set
+const validSupabaseUrl = isValidUrl(supabaseUrl) ? supabaseUrl : 'https://placeholder.supabase.co'
+const validSupabaseKey = supabaseKey && supabaseKey !== 'placeholder-key' ? supabaseKey : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDU3Njg0MDB9.placeholder'
+
+export const supabase = createClient(validSupabaseUrl, validSupabaseKey)
 
 export interface Profile {
   id: string
