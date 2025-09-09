@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || ''
-const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY || ''
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || 'https://placeholder.supabase.co'
+const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY || 'placeholder-key'
 
 export const supabase = createClient(supabaseUrl, supabaseKey)
 
@@ -51,8 +51,12 @@ export interface Post {
   upvotes: number
   downvotes: number
   comment_count: number
+  view_count: number
   is_pinned: boolean
   is_locked: boolean
+  is_solved?: boolean
+  post_type?: string
+  tags?: string[]
   created_at: string
   updated_at: string
   profiles: Profile

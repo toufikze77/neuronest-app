@@ -230,7 +230,7 @@ const NeuroNestApp: React.FC = () => {
     }
   }
 
-  const renderView = (): JSX.Element => {
+  const renderView = () => {
     switch (currentView) {
       case 'home':
         return (

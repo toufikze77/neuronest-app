@@ -28,7 +28,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
     try {
       if (isSignUp) {
-        await signUp(formData.email, formData.password, formData.username, formData.displayName)
+        await signUp(formData.email, formData.password, { username: formData.username, display_name: formData.displayName })
       } else {
         await signIn(formData.email, formData.password)
       }

@@ -6,8 +6,8 @@ interface AuthContextType {
   user: User | null
   profile: Profile | null
   loading: boolean
-  signUp: (email: string, password: string, userData: { username: string; display_name: string }) => Promise<{ error?: AuthError }>
-  signIn: (email: string, password: string) => Promise<{ error?: AuthError }>
+  signUp: (email: string, password: string, userData: { username: string; display_name: string }) => Promise<{ error?: AuthError | null }>
+  signIn: (email: string, password: string) => Promise<{ error?: AuthError | null }>
   signOut: () => Promise<void>
   updateProfile: (updates: Partial<Profile>) => Promise<void>
 }

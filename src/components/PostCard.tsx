@@ -48,7 +48,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onVote, currentUser }) => {
             </span>
             <span className="text-gray-400 text-sm">@{post.profiles.username}</span>
             {post.profiles.is_expert && (
-              <CheckCircle2 className="h-4 w-4 text-blue-400" title="Verified Expert" />
+              <CheckCircle2 className="h-4 w-4 text-blue-400" />
             )}
             <span className="text-gray-500">•</span>
             <span className="text-gray-400 text-sm">{getTimeAgo(post.created_at)}</span>
@@ -80,8 +80,8 @@ const PostCard: React.FC<PostCardProps> = ({ post, onVote, currentUser }) => {
 
       {/* Post type and status */}
       <div className="flex items-center space-x-2 mb-3">
-        <span className={`text-xs px-2 py-1 rounded-full uppercase font-medium ${getPostTypeColor(post.post_type)}`}>
-{post.post_type}
+        <span className={`text-xs px-2 py-1 rounded-full uppercase font-medium ${getPostTypeColor(post.post_type || 'discussion')}`}>
+{post.post_type || 'Discussion'}
        </span>
        {post.is_solved && (
          <span className="flex items-center space-x-1 text-green-400 text-xs">
