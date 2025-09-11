@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { 
   Menu, X, Search, Bell, Plus, Home, Users, Brain, BookOpen, TrendingUp,
-  Settings, User, LogOut, Crown, Zap, MessageCircle, ArrowUp, ArrowDown,
-  Reply, Award, Star, Clock, CheckCircle2, Code, Github, Linkedin,
-  Twitter, Globe, Lock, Eye, EyeOff, Filter, MoreHorizontal, Edit,
-  Trash2, Flag, Pin, Flame, Target, Trophy, Calendar, CreditCard
+  Settings, User, LogOut, Crown, Zap, CheckCircle2, Globe, Lock, Filter, 
+  Flame, Trophy, CreditCard
 } from 'lucide-react'
 import { useAuth } from './contexts/AuthContext'
-import { supabase, Post, Community, Comment } from './lib/supabase'
+import { supabase, Post, Community } from './lib/supabase'
 import AuthModal from './components/AuthModal'
 import CreatePostModal from './components/CreatePostModal'
 import CreateCommunityModal from './components/CreateCommunityModal'
@@ -24,7 +22,6 @@ const NeuroNestApp: React.FC = () => {
   const [currentView, setCurrentView] = useState<string>('home')
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false)
   const [userMenuOpen, setUserMenuOpen] = useState<boolean>(false)
-  const [notificationsOpen, setNotificationsOpen] = useState<boolean>(false)
   const [showAuthModal, setShowAuthModal] = useState<boolean>(false)
   const [showCreatePostModal, setShowCreatePostModal] = useState<boolean>(false)
   const [showCreateCommunityModal, setShowCreateCommunityModal] = useState<boolean>(false)

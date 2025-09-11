@@ -41,7 +41,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
         .map(tag => tag.trim().toLowerCase())
         .filter(tag => tag.length > 0)
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('posts')
         .insert([{
           title: formData.title,

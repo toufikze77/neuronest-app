@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { User, AuthError } from '@supabase/supabase-js'
+import { User } from '@supabase/supabase-js'
 import { supabase, Profile } from '../lib/supabase'
 import { validateSignupData, sanitizeInput, RateLimiter, parseAuthError } from '../utils/validation'
 
@@ -420,3 +420,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     </AuthContext.Provider>
   )
 }
+
+// Default export for better module compatibility
+const AuthModule = {
+  useAuth,
+  AuthProvider
+}
+
+export default AuthModule
