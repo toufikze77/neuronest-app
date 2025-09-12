@@ -421,10 +421,4 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   )
 }
 
-// Default export for better module compatibility
-const AuthModule = {
-  useAuth,
-  AuthProvider
-}
-
-export default AuthModule
+// Note: Using named exports for better ES module compatibility
