@@ -1,24 +1,25 @@
 import { createClient } from '@supabase/supabase-js'
 
-// Environment variables are swapped, so we need to fix this
-const supabaseUrl = process.env.REACT_APP_SUPABASE_ANON_KEY || 'https://placeholder.supabase.co'
-const supabaseKey = process.env.REACT_APP_SUPABASE_URL || 'placeholder-key'
+// Fixed: Use correct environment variables with strict validation
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL
+const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY
 
-// For development, validate URL and provide fallback
-const isValidUrl = (url: string): boolean => {
-  try {
-    new URL(url)
-    return url.startsWith('https://') || url.startsWith('http://')
-  } catch {
-    return false
-  }
+// Strict validation - fail fast if environment variables are missing
+if (!supabaseUrl || !supabaseKey) {
+  console.error('Missing Supabase environment variables!')
+  console.error('REACT_APP_SUPABASE_URL:', supabaseUrl)
+  console.error('REACT_APP_SUPABASE_ANON_KEY:', supabaseKey ? 'Set' : 'Missing')
+  throw new Error('Missing required Supabase environment variables. Please check your secrets configuration.')
 }
 
-// Use a valid placeholder URL if environment variables are not set
-const validSupabaseUrl = isValidUrl(supabaseUrl) ? supabaseUrl : 'https://placeholder.supabase.co'
-const validSupabaseKey = supabaseKey && supabaseKey !== 'placeholder-key' ? supabaseKey : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDU3Njg0MDB9.placeholder'
+// Check for placeholder values (indicates misconfiguration)
+if (supabaseUrl.includes('placeholder') || supabaseKey.includes('placeholder')) {
+  console.error('Detected placeholder Supabase credentials!')
+  throw new Error('Placeholder Supabase credentials detected. Please configure real credentials.')
+}
 
-export const supabase = createClient(validSupabaseUrl, validSupabaseKey)
+console.log('✅ Supabase client configured with URL:', supabaseUrl)
+export const supabase = createClient(supabaseUrl, supabaseKey)
 
 export interface Profile {
   id: string

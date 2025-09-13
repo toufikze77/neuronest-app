@@ -71,7 +71,7 @@ export const validatePassword = (password: string): ValidationResult => {
     errors.push('Password must contain at least one number')
   }
   
-  if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+  if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
     errors.push('Password must contain at least one special character')
   }
   
@@ -162,7 +162,7 @@ export const validateDisplayName = (displayName: string): ValidationResult => {
   }
   
   // Check for potentially harmful content
-  if (/[<>\"'&]/.test(displayName)) {
+  if (/[<>"'&]/.test(displayName)) {
     errors.push('Display name contains invalid characters')
   }
   
@@ -172,7 +172,7 @@ export const validateDisplayName = (displayName: string): ValidationResult => {
 // Sanitize input to prevent XSS
 export const sanitizeInput = (input: string): string => {
   return input
-    .replace(/[<>\"'&]/g, '') // Remove potentially harmful characters
+    .replace(/[<>"'&]/g, '') // Remove potentially harmful characters
     .trim() // Remove leading/trailing whitespace
     .slice(0, 1000) // Limit length to prevent DoS
 }

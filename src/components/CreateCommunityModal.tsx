@@ -66,10 +66,14 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log('🚀 Starting community creation...')
+    
     if (!user) {
       setError('You must be logged in to create a community')
       return
     }
+
+    console.log('✅ User authenticated:', user.id)
 
     // Check for validation errors
     if (Object.keys(validationErrors).length > 0) {
@@ -82,6 +86,7 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
     setSuccess('')
 
     try {
+      console.log('📝 Form data:', formData)
       // Sanitize inputs
       const sanitizedName = sanitizeInput(formData.name.trim())
       const sanitizedDescription = formData.description.trim() 
@@ -90,18 +95,39 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
       
       const slug = generateSlug(sanitizedName)
 
-      // Check if slug already exists
-      const { data: existingCommunity } = await supabase
-        .from('communities')
-        .select('slug')
-        .eq('slug', slug)
-        .single()
-
-      if (existingCommunity) {
-        setError('A community with this name already exists. Please choose a different name.')
-        return
+      console.log('🔍 Checking if slug exists:', slug)
+      
+      // Check if slug already exists (fast lookup with timeout fallback)
+      try {
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('timeout')), 8000)
+        )
+        
+        const queryPromise = supabase
+          .from('communities')
+          .select('id')
+          .eq('slug', slug)
+          .limit(1)
+          .maybeSingle()
+        
+        const { data: existing, error: slugError } = await Promise.race([queryPromise, timeoutPromise]) as any
+        
+        if (slugError && !slugError.message?.includes('timeout')) {
+          console.warn('⚠️ Slug precheck warning:', slugError)
+        }
+        
+        if (existing) {
+          setError('A community with this name already exists. Please choose a different name.')
+          return
+        }
+        
+        console.log('✅ Slug check completed - available')
+      } catch (error: any) {
+        console.warn('⚠️ Slug precheck timed out, will rely on database constraint')
       }
 
+      console.log('🏗️ Creating community...')
+      
       // Create community
       const { data: communityData, error: communityError } = await supabase
         .from('communities')
@@ -117,7 +143,14 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
         .select()
         .single()
 
-      if (communityError) throw communityError
+      if (communityError) {
+        // Handle unique constraint violation (duplicate slug)
+        if (communityError.code === '23505') {
+          setError('A community with this name already exists. Please choose a different name.')
+          return
+        }
+        throw communityError
+      }
 
       if (communityData) {
         // Add the creator as a member of the community
